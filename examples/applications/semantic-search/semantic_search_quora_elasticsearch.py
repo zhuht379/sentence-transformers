@@ -86,7 +86,7 @@ if not es.indices.exists(index="quora"):
         with tqdm.tqdm(total=len(qids)) as pbar:
             for start_idx in range(0, len(qids), chunk_size):
                 end_idx = start_idx+chunk_size
-
+                
                 embeddings = model.encode(questions[start_idx:end_idx], show_progress_bar=False)
                 bulk_data = []
                 for qid, question, embedding in zip(qids[start_idx:end_idx], questions[start_idx:end_idx], embeddings):
@@ -117,6 +117,7 @@ while True:
     encode_end_time = time.time()
 
     #Lexical search
+    # 上面代码使用 Match 查询，指定的匹配条件是desc字段里面包含"软件"这个词。返回结果如下。
     bm25 = es.search(index="quora", body={"query": {"match": {"question": inp_question }}})
 
     #Semantic search
